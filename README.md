@@ -1,5 +1,9 @@
 # Vikunja Map
 
+<img width="1387" height="659" alt="image" src="https://github.com/user-attachments/assets/50a4fbd9-c345-4f4c-b745-49ccce8cb7c7" />
+
+<img width="1052" height="714" alt="image" src="https://github.com/user-attachments/assets/d60f697b-08a0-4f85-8fdc-be8259be5e92" />
+
 A single-page **dependency map** for [Vikunja](https://vikunja.io): a
 force-directed graph of every project, task and relation, plus a **leverage
 panel** ("what does this task unblock, and how heavy is it") and a
