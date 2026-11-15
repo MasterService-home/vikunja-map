@@ -1,0 +1,36 @@
+# Example: run behind a Traefik reverse proxy instead of publishing a port.
+#
+#   docker compose -f docker-compose.traefik.yml up -d --build
+#
+# Adjust ALL of the following to match YOUR setup:
+#   - the Host(...) rule (your hostname)
+#   - the external network name (must be the network your Traefik is on)
+#   - the middleware name (e.g. your IP allowlist / auth) and its provider suffix
+#     (@file or @docker). A wrong/missing middleware makes Traefik return 404.
+services:
+  vikunja-map:
+    build: .
+    image: vikunja-map:local
+    container_name: vikunja-map
+    env_file: .env
+    restart: unless-stopped
+    networks:
+      - proxy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz')"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.vikunja-map.rule=Host(`vikunja-map.example.com`)"
+      - "traefik.http.routers.vikunja-map.entrypoints=websecure"
+      - "traefik.http.routers.vikunja-map.tls=true"
+      # OPTIONAL: protect it — replace with a middleware that EXISTS in your config
+      # - "traefik.http.routers.vikunja-map.middlewares=my-allowlist@file"
+      - "traefik.http.services.vikunja-map.loadbalancer.server.port=8000"
+
+networks:
+  proxy:
+    external: true
